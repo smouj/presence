@@ -33,4 +33,4 @@ Issues = "https://github.com/smouj/presence/issues"
 packages = ["presence"]
 
 [tool.setuptools.package-data]
-presence = ["web/*"]
+presence = ["web/*", "data/*"]

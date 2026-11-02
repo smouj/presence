@@ -41,6 +41,14 @@ class Workspace:
         self.root = os.path.abspath(root)
         self.config_path = os.path.join(self.root, "accounts.json")
         self.example_path = os.path.join(self.root, "accounts.example.json")
+        if not os.path.exists(self.example_path):
+            for fallback in (
+                os.path.join(self.root, "config", "accounts.example.json"),
+                os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "accounts.example.json"),
+            ):
+                if os.path.exists(fallback):
+                    self.example_path = fallback
+                    break
         self.data_path = os.path.join(self.root, "data.json")
         self.history_path = os.path.join(self.root, "history.jsonl")
         self.backups_dir = os.path.join(self.root, "backups")

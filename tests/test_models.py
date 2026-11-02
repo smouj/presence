@@ -51,6 +51,11 @@ class ValidationTests(unittest.TestCase):
     def test_empty_platforms(self):
         self.assertTrue(models.validate({"schema_version": 1, "platforms": []}))
 
+    def test_bundled_example_matches_repository_example(self):
+        bundled = os.path.join(ROOT, "presence", "data", "accounts.example.json")
+        with open(bundled, encoding="utf-8") as handle:
+            self.assertEqual(json.load(handle), example())
+
 
 class HealthTests(unittest.TestCase):
     def test_full_setup_scores_100(self):

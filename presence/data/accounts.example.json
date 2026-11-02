@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "brand": {
+    "name": "Acme Studio",
+    "handle": "@acme",
+    "bio": "Independent software, local-first tools and games."
+  },
+  "platforms": [
+    {
+      "id": "github",
+      "name": "GitHub",
+      "handle": "acme-studio",
+      "url": "https://github.com/acme-studio",
+      "category": "code",
+      "tracking": "auto",
+      "collector": "github",
+      "verified": true,
+      "priority": "high",
+      "role": "Source of truth for the work itself.",
+      "next_action": "Pin the six repositories that tell the story.",
+      "checklist": [
+        {
+          "item": "Profile README published",
+          "done": true
+        },
+        {
+          "item": "Bio matches the brand",
+          "done": true
+        },
+        {
+          "item": "Pinned repositories curated",
+          "done": false
+        },
+        {
+          "item": "Outbound links to other platforms",
+          "done": true
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "bluesky",
+      "name": "Bluesky",
+      "handle": "acme.bsky.social",
+      "url": "https://bsky.app/profile/acme.bsky.social",
+      "category": "microblog",
+      "tracking": "auto",
+      "collector": "bluesky",
+      "verified": true,
+      "priority": "high",
+      "role": "Main short-form channel and release notes.",
+      "next_action": "Three technical threads per week, one pinned intro.",
+      "checklist": [
+        {
+          "item": "Brand avatar",
+          "done": true
+        },
+        {
+          "item": "Clear bio",
+          "done": true
+        },
+        {
+          "item": "Link to GitHub",
+          "done": true
+        },
+        {
+          "item": "Pinned introduction post",
+          "done": null
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "npm",
+      "name": "npm",
+      "handle": "acme-studio",
+      "url": "https://www.npmjs.com/~acme-studio",
+      "category": "code",
+      "tracking": "auto",
+      "collector": "npm",
+      "verified": true,
+      "priority": "medium",
+      "role": "CLI distribution.",
+      "next_action": "Deprecate or remove abandoned packages.",
+      "packages": [
+        "@acme/cli",
+        "@acme/core"
+      ],
+      "checklist": [
+        {
+          "item": "No deprecated packages left",
+          "done": false
+        },
+        {
+          "item": "README on every package",
+          "done": null
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "huggingface",
+      "name": "Hugging Face",
+      "handle": "acme",
+      "url": "https://huggingface.co/acme",
+      "category": "ai",
+      "tracking": "auto",
+      "collector": "huggingface",
+      "verified": false,
+      "priority": "medium",
+      "role": "Models and demos.",
+      "next_action": "Complete the model card with limits and licence.",
+      "checklist": [
+        {
+          "item": "Model card with usage and limits",
+          "done": null
+        },
+        {
+          "item": "Working Space demo",
+          "done": null
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "discord",
+      "name": "Discord",
+      "handle": "Acme",
+      "url": "https://discord.gg/example",
+      "category": "community",
+      "tracking": "auto",
+      "collector": "discord",
+      "verified": true,
+      "priority": "medium",
+      "role": "Community and direct support.",
+      "next_action": "Order channels and publish the rules.",
+      "checklist": [
+        {
+          "item": "Channels described",
+          "done": null
+        },
+        {
+          "item": "Rules published",
+          "done": null
+        },
+        {
+          "item": "Permanent invite",
+          "done": true
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "mastodon",
+      "name": "Mastodon",
+      "handle": "@acme",
+      "url": "https://mastodon.social/@acme",
+      "category": "microblog",
+      "tracking": "auto",
+      "collector": "mastodon",
+      "verified": false,
+      "priority": "low",
+      "role": "Open-network mirror.",
+      "next_action": "Mirror the best Bluesky threads.",
+      "checklist": [
+        {
+          "item": "Profile fields completed",
+          "done": null
+        },
+        {
+          "item": "Verified link",
+          "done": null
+        }
+      ],
+      "notes": "Set the instance in config if it is not in the URL."
+    },
+    {
+      "id": "x",
+      "name": "X",
+      "handle": "@acme",
+      "url": "https://x.com/acme",
+      "category": "microblog",
+      "tracking": "manual",
+      "verified": true,
+      "priority": "low",
+      "role": "Reach, when there is something to amplify.",
+      "next_action": "Reading metrics requires a paid API; log them by hand.",
+      "checklist": [
+        {
+          "item": "Brand bio",
+          "done": true
+        },
+        {
+          "item": "Link to GitHub",
+          "done": null
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "instagram",
+      "name": "Instagram",
+      "handle": "@acme.studio",
+      "url": "https://www.instagram.com/acme.studio/",
+      "category": "visual",
+      "tracking": "manual",
+      "verified": true,
+      "priority": "medium",
+      "role": "Visual showcase.",
+      "next_action": "Three pieces per week with the shared template.",
+      "checklist": [
+        {
+          "item": "Bio with link",
+          "done": null
+        },
+        {
+          "item": "Highlights ordered",
+          "done": null
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube",
+      "handle": "@acme",
+      "url": "https://www.youtube.com/@acme",
+      "category": "video",
+      "tracking": "manual",
+      "verified": false,
+      "priority": "medium",
+      "role": "Long-form devlogs.",
+      "next_action": "Record a two-minute devlog; add a free Data API key for metrics.",
+      "checklist": [
+        {
+          "item": "Channel bio and links",
+          "done": null
+        },
+        {
+          "item": "First video published",
+          "done": false
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "itch",
+      "name": "itch.io",
+      "handle": "acme",
+      "url": "https://acme.itch.io/",
+      "category": "games",
+      "tracking": "manual",
+      "verified": true,
+      "priority": "low",
+      "role": "Playable builds.",
+      "next_action": "Upload a cover and keep only current projects visible.",
+      "checklist": [
+        {
+          "item": "Profile HTML written",
+          "done": true
+        },
+        {
+          "item": "Cover image uploaded",
+          "done": false
+        }
+      ],
+      "notes": ""
+    }
+  ]
+}
