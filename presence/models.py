@@ -66,6 +66,21 @@ def validate(doc: Any) -> list[str]:
         if "priority" in p and p["priority"] not in PRIORITIES:
             errors.append("%s: priority must be high, medium or low." % pid)
 
+        manual = p.get("manual_metrics")
+        if manual is not None:
+            if not isinstance(manual, dict):
+                errors.append("%s: manual_metrics must be an object." % pid)
+            else:
+                values = manual.get("values")
+                if not isinstance(values, dict) or not values:
+                    errors.append("%s: manual_metrics.values must be a non-empty object." % pid)
+                else:
+                    for key, value in values.items():
+                        if not isinstance(value, (int, float)) or isinstance(value, bool):
+                            errors.append("%s: manual metric '%s' must be a number." % (pid, key))
+                if manual.get("as_of") is not None and not isinstance(manual.get("as_of"), str):
+                    errors.append("%s: manual_metrics.as_of must be a date string." % pid)
+
         checklist = p.get("checklist", [])
         if not isinstance(checklist, list):
             errors.append("%s: checklist must be a list." % pid)
@@ -103,6 +118,7 @@ def normalize(doc: dict) -> dict:
         item.setdefault("next_action", "")
         item.setdefault("notes", "")
         item.setdefault("checklist", [])
+        item.setdefault("manual_metrics", None)
         out.append(item)
     doc["platforms"] = out
     return doc

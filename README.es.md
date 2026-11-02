@@ -53,6 +53,8 @@ Nunca publica. Nunca programa. Nunca edita un perfil remoto.
 | **Histórico** | Una línea JSON por lectura; deltas y gráficas con puntos reales. |
 | **Editor** | Cambiar handles, prioridades y checklists desde el panel. |
 | **Copias** | Cada guardado conserva la versión anterior; se mantienen las 20 últimas. |
+| **Números manuales** | Escribe seguidores, posts o karma con la fecha de medición. |
+| **App de escritorio** | Bandeja de Windows que arranca y detiene el servidor. |
 | **CSV** | Exportación de todas las métricas. |
 
 ## Arranque rápido
@@ -68,6 +70,25 @@ python -m presence serve     # http://127.0.0.1:8770
 Abre <http://127.0.0.1:8770>, pulsa **Collect** y edita tus cuentas.
 
 Requisitos: Python 3.11 o superior. Nada más. Sin Node, sin Docker, sin compilación.
+
+## App de escritorio
+
+El mismo panel puede vivir en la bandeja de Windows: al abrir la app arranca el
+servidor local y **Quit** lo detiene.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File desktop\build.ps1 -SourceDir C:\ruta\a\presence
+```
+
+Compila con el `csc.exe` incluido en Windows (sin SDK de .NET) y genera
+`desktop\bin\Presence.exe`. Cópialo junto a un `presence.desktop.ini` con tu
+distro, raíz del workspace, puerto y ruta del CLI.
+
+- El menú de la bandeja tiene **Open Presence**, **Update numbers now**,
+  **Open data folder**, **Start with Windows** y **Quit**.
+- El panel se abre en una ventana de aplicación de Edge (o el navegador por defecto).
+- Cerrar la ventana mantiene la bandeja viva; **Quit** detiene el servidor.
+- `Presence.exe --quit` cierra una instancia abierta sin dejar el servidor suelto.
 
 ## Capturas
 

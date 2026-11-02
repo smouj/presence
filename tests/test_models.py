@@ -51,6 +51,22 @@ class ValidationTests(unittest.TestCase):
     def test_empty_platforms(self):
         self.assertTrue(models.validate({"schema_version": 1, "platforms": []}))
 
+
+    def test_manual_metrics_are_validated(self):
+        doc = example()
+        doc["platforms"][0]["manual_metrics"] = {"values": {"followers": 10}, "as_of": "2026-09-20"}
+        self.assertEqual(models.validate(doc), [])
+
+    def test_manual_metrics_reject_text_values(self):
+        doc = example()
+        doc["platforms"][0]["manual_metrics"] = {"values": {"followers": "many"}}
+        self.assertTrue(any("must be a number" in e for e in models.validate(doc)))
+
+    def test_manual_metrics_reject_empty_values(self):
+        doc = example()
+        doc["platforms"][0]["manual_metrics"] = {"values": {}}
+        self.assertTrue(any("non-empty" in e for e in models.validate(doc)))
+
     def test_bundled_example_matches_repository_example(self):
         bundled = os.path.join(ROOT, "presence", "data", "accounts.example.json")
         with open(bundled, encoding="utf-8") as handle:

@@ -54,6 +54,8 @@ It never publishes. It never schedules. It never edits a remote profile.
 | **History** | One JSON line per collection; deltas and charts from real points. |
 | **Editor** | Change handles, priorities and checklists from the dashboard. |
 | **Backups** | Every save copies the previous config and keeps the last 20. |
+| **Manual numbers** | Type followers, posts or karma with the date you measured them. |
+| **Desktop app** | Windows tray app that starts and stops the local server. |
 | **CSV** | Export every metric for a spreadsheet. |
 
 ## Quick start
@@ -69,6 +71,25 @@ python -m presence serve     # http://127.0.0.1:8770
 Then open <http://127.0.0.1:8770>, press **Collect** and edit your accounts.
 
 Requirements: Python 3.11 or newer. Nothing else. No Node, no Docker, no build step.
+
+## Desktop app
+
+The same panel can live in the Windows tray: opening the app starts the local
+server, and **Quit** stops it.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File desktop\build.ps1 -SourceDir C:\path\to\presence
+```
+
+It compiles with the in-box `csc.exe` (no .NET SDK) and produces
+`desktop\bin\Presence.exe`. Copy it next to a `presence.desktop.ini` with your
+distro, workspace root, port and CLI path.
+
+- The tray menu has **Open Presence**, **Update numbers now**, **Open data folder**,
+  **Start with Windows** and **Quit**.
+- The panel opens in an Edge app window (falls back to your browser).
+- Closing the window keeps the tray running; **Quit** stops the server.
+- `Presence.exe --quit` closes a running instance cleanly.
 
 ## Screenshots
 

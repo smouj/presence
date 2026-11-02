@@ -53,8 +53,7 @@ class Handler(SimpleHTTPRequestHandler):
                 return self._json({"ok": False, "errors": exc.errors}, 422)
             except Exception as exc:
                 return self._error(500, str(exc))
-            cached = store.read_json(self.workspace.data_path, {}) or {}
-            data = cached if cached.get("platforms") else self.workspace.build_state(accounts)
+            data = self.workspace.build_state(accounts)
             return self._json({"ok": True, "accounts": accounts, "data": data,
                                "now": store.utc_now()})
 

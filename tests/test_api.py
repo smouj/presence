@@ -80,6 +80,20 @@ class ApiTests(unittest.TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["config"]["platforms"][0]["notes"], "edited in test")
 
+
+    def test_manual_metrics_round_trip(self):
+        with open(EXAMPLE, encoding="utf-8") as handle:
+            doc = json.load(handle)
+        platform = [p for p in doc["platforms"] if p["tracking"] == "manual"][0]
+        platform["manual_metrics"] = {"values": {"followers": 321}, "as_of": "2026-10-01"}
+        status, payload = self.put("/api/config", doc)
+        self.assertEqual(status, 200)
+        _, body = self.get("/api/state")
+        state = json.loads(body)
+        target = [p for p in state["data"]["platforms"] if p["id"] == platform["id"]][0]
+        self.assertEqual(target["metrics"]["followers"], 321)
+        self.assertEqual(target["metrics_source"], "manual")
+
     def test_export_csv(self):
         status, body = self.get("/api/export.csv")
         self.assertEqual(status, 200)

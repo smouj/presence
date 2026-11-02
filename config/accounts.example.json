@@ -218,7 +218,15 @@
           "done": null
         }
       ],
-      "notes": ""
+      "notes": "",
+      "manual_metrics": {
+        "values": {
+          "followers": 1240,
+          "following": 310,
+          "posts": 24
+        },
+        "as_of": "2026-10-28"
+      }
     },
     {
       "id": "youtube",
@@ -241,7 +249,14 @@
           "done": false
         }
       ],
-      "notes": ""
+      "notes": "",
+      "manual_metrics": {
+        "values": {
+          "subscribers": 86,
+          "videos": 3
+        },
+        "as_of": "2026-10-28"
+      }
     },
     {
       "id": "itch",

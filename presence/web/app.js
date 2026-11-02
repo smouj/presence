@@ -131,6 +131,16 @@
       "</svg></div>";
   }
 
+  function ago(iso) {
+    if (!iso) return "never";
+    var minutes = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+    if (minutes < 1) return "just now";
+    if (minutes < 60) return minutes + " min ago";
+    var hours = Math.round(minutes / 60);
+    if (hours < 24) return hours + " h ago";
+    return Math.round(hours / 24) + " d ago";
+  }
+
   function ring(pct, size) {
     var r = 44, c = (2 * Math.PI * r).toFixed(2), value = (Math.max(0, Math.min(100, pct)) / 100 * c).toFixed(2);
     return '<div class="ring" style="width:' + size + "px;height:" + size + 'px;flex-basis:' + size + 'px">' +
@@ -192,7 +202,7 @@
     var done = items.filter(function (c) { return c.done === true; }).length;
     var pct = items.length ? Math.round(100 * done / items.length) : 0;
     var status = d.error ? "err" : (p.tracking === "auto" ? "auto" : "manual");
-    var statusText = d.error ? "error" : (p.tracking === "auto" ? "auto" : "manual");
+    var statusText = d.error ? "needs attention" : (p.tracking === "auto" ? "live" : "manual");
 
     return '<article class="card' + (S.editing === p.id ? " isediting" : "") + '" data-id="' + esc(p.id) + '">' +
       '<div class="chead">' + brandTile(p) +
@@ -203,17 +213,18 @@
         '<span class="pill ' + status + '"><i></i>' + statusText + "</span>" +
       "</div>" +
       '<div class="role">' + esc(p.role || "") + "</div>" +
-      (keys.length ? '<div class="stats">' + stats + "</div>"
-                   : '<div class="errmsg">Manual platform. Metrics are typed by hand.</div>') +
+      (keys.length ? '<div class="stats">' + stats + "</div>" +
+        (d.metrics_source === "manual" ? '<div class="mnote">Entered by hand · ' + esc(d.metrics_as_of || "—") + "</div>" : "")
+                   : '<div class="mnote">No numbers yet. Add them in the editor.</div>') +
       sparkline(d.series) +
       (p.next_action ? '<div class="next">' + icon("arrow", 13) + "<span>" + esc(p.next_action) + "</span></div>" : "") +
       (items.length
-        ? '<div class="prog"><div class="lbl"><span>Setup</span><span>' + done + "/" + items.length +
+        ? '<div class="prog"><div class="lbl"><span>Profile</span><span>' + done + "/" + items.length +
           " · " + pct + '%</span></div><div class="bar"><i style="width:' + pct + '%"></i></div></div>'
         : "") +
       (d.error ? '<div class="errmsg">' + esc(d.error) + "</div>" : "") +
       '<div class="cfoot"><span class="v">' + (p.verified ? icon("check", 12) + "Verified" : "Unverified") + "</span>" +
-        '<button class="linkbtn" data-edit="' + esc(p.id) + '">Configure ' + icon("arrow", 12) + "</button></div>" +
+        '<button class="linkbtn" data-edit="' + esc(p.id) + '">Open ' + icon("arrow", 12) + "</button></div>" +
     "</article>";
   }
 
@@ -257,15 +268,15 @@
 
     $("hero").innerHTML =
       '<div class="panel health">' + ring(health, 104) +
-        "<div><h2>Setup health</h2><p>" +
-        (open ? open + " open items across the registry." : "Every checklist item is closed.") +
-        "</p></div></div>" +
+        "<div><h2>Profile health</h2><p>" +
+        (open ? open + " details left to complete." : "Everything is complete.") +
+        '</p><p class="mnote">Updated ' + ago((S.data || {}).last_collection) + "</p></div></div>" +
       '<div class="panel"><div class="tiles">' +
-        '<div class="tile"><div class="k">' + icon("layers", 12) + "Platforms</div><b>" + total + "</b></div>" +
-        '<div class="tile"><div class="k">' + icon("bolt", 12) + "Live data</div><b>" + autoOk +
+        '<div class="tile"><div class="k">' + icon("layers", 12) + "Accounts</div><b>" + total + "</b></div>" +
+        '<div class="tile"><div class="k">' + icon("bolt", 12) + "Up to date</div><b>" + autoOk +
           "<small>/" + (counts.auto || 0) + "</small></b></div>" +
         '<div class="tile"><div class="k">' + icon("lock", 12) + "Manual</div><b>" + manual + "</b></div>" +
-        '<div class="tile"><div class="k">' + icon("clock", 12) + "Open tasks</div><b>" + open + "</b></div>" +
+        '<div class="tile"><div class="k">' + icon("clock", 12) + "To fix</div><b>" + open + "</b></div>" +
         '<div class="dist"><div class="distbar">' +
           '<i class="a" style="width:' + (100 * autoOk / total).toFixed(1) + '%"></i>' +
           '<i class="e" style="width:' + (100 * autoFail / total).toFixed(1) + '%"></i>' +
@@ -291,6 +302,12 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-f]"), function (b) {
       b.onclick = function () { S.filter = b.getAttribute("data-f"); chips(); render(); };
     });
+  }
+
+  function manualRow(key, value) {
+    return '<div class="mfield" data-row><input data-mkey value="' + esc(key) + '" placeholder="followers" aria-label="Metric name">' +
+      '<input data-mval type="number" step="any" value="' + (typeof value === "number" ? value : "") + '" placeholder="0" aria-label="Value">' +
+      '<button type="button" data-mdel title="Remove">×</button></div>';
   }
 
   function openDrawer(id) {
@@ -333,7 +350,13 @@
           '<div class="field"><label>Next action</label><input id="f-next" value="' + esc(p.next_action || "") + '"></div>' +
           '<div class="field"><label>Notes</label><textarea id="f-notes">' + esc(p.notes || "") + "</textarea></div>" +
         "</div>" +
-        '<div class="sect"><h3>Setup</h3>' +
+        (p.tracking === "manual" ? '<div class="sect"><h3>Numbers</h3>' +
+          '<div id="mrows">' + Object.keys((p.manual_metrics || {}).values || {})
+            .map(function (k) { return manualRow(k, p.manual_metrics.values[k]); }).join("") + "</div>" +
+          '<button class="addrow" id="madd" type="button">+ Add a number</button>' +
+          '<div class="field" style="margin-top:10px"><label>Measured on</label>' +
+          '<input id="m-date" type="date" value="' + esc((p.manual_metrics || {}).as_of || new Date().toISOString().slice(0, 10)) + '"></div></div>' : "") +
+        '<div class="sect"><h3>Profile</h3>' +
           '<div class="lbl" style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:6px">' +
           "<span>Checklist</span><span>" + h.checklist_done + "/" + h.checklist_total + "</span></div>" +
           '<div class="bar"><i style="width:' + (h.checklist_total ? Math.round(100 * h.checklist_done / h.checklist_total) : 100) + '%"></i></div>' +
@@ -365,7 +388,25 @@
       $(x).addEventListener("input", markDirty);
     });
     $("dsave").onclick = saveDrawer;
+    bindManual();
     render();
+  }
+
+  function bindManual() {
+    var rows = document.querySelectorAll("[data-row]");
+    Array.prototype.forEach.call(rows, function (row) {
+      var del = row.querySelector("[data-mdel]");
+      if (del) del.onclick = function () { row.remove(); markDirty(); };
+      Array.prototype.forEach.call(row.querySelectorAll("input"), function (input) {
+        input.addEventListener("input", markDirty);
+      });
+    });
+    var add = $("madd");
+    if (add) add.onclick = function () {
+      $("mrows").insertAdjacentHTML("beforeend", manualRow("", ""));
+      bindManual();
+      markDirty();
+    };
   }
 
   function markDirty() {
@@ -391,6 +432,19 @@
     p.next_action = $("f-next").value.trim();
     p.notes = $("f-notes").value;
     p.priority = $("f-priority").value;
+    if (p.tracking === "manual") {
+      var values = {};
+      Array.prototype.forEach.call(document.querySelectorAll("[data-row]"), function (row) {
+        var key = row.querySelector("[data-mkey]").value.trim().toLowerCase()
+          .replace(/[^a-z0-9_]+/g, "_").replace(/^_+|_+$/g, "");
+        var value = parseFloat(row.querySelector("[data-mval]").value);
+        if (key && isFinite(value)) values[key] = value;
+      });
+      var measured = ($("m-date") && $("m-date").value) || "";
+      p.manual_metrics = Object.keys(values).length
+        ? { values: values, as_of: measured || new Date().toISOString().slice(0, 10) }
+        : null;
+    }
     Array.prototype.forEach.call(document.querySelectorAll(".tri"), function (b) {
       var i = parseInt(b.getAttribute("data-i"), 10);
       var v = b.getAttribute("data-v");

@@ -66,7 +66,23 @@ class Workspace:
         if os.path.exists(self.config_path):
             self._backup_config()
         write_json(self.config_path, doc)
+        self.record_manual_metrics(doc["platforms"])
         return doc
+
+    def record_manual_metrics(self, platforms: list[dict]) -> None:
+        """Turn dated manual snapshots into history points, once per date."""
+        history = self.history()
+        seen = {(row.get("ts"), pid) for row in history for pid in row.get("metrics", {})}
+        for p in platforms:
+            manual = p.get("manual_metrics") or {}
+            values = manual.get("values") or {}
+            as_of = manual.get("as_of")
+            if not values or not as_of:
+                continue
+            ts = as_of + "T12:00:00+00:00"
+            if (ts, p["id"]) in seen:
+                continue
+            self.append_history(ts, {p["id"]: dict(values)})
 
     def _backup_config(self) -> str:
         os.makedirs(self.backups_dir, exist_ok=True)
@@ -114,14 +130,20 @@ class Workspace:
         for p in accounts["platforms"]:
             pid = p["id"]
             series = []
-            latest = fresh.get(pid) or self._previous(history, pid, ts)
+            manual = (p.get("manual_metrics") or {})
+            manual_values = manual.get("values") or {}
+            latest = fresh.get(pid) or manual_values or self._previous(history, pid, ts)
+            source = ("auto" if pid in fresh else
+                      "manual" if manual_values else
+                      "history" if latest else None)
             prev = self._previous(history, pid, ts)
             delta = {
                 key: round(value - prev[key], 2)
                 for key, value in latest.items()
                 if isinstance(value, (int, float)) and isinstance(prev.get(key), (int, float))
             }
-            key = PRIMARY.get(p.get("collector") or "")
+            key = PRIMARY.get(p.get("collector") or "") or (
+                next(iter(manual_values), None) if manual_values else None)
             if key:
                 for row in history:
                     if row.get("ts") and row["ts"] >= ts:
@@ -135,10 +157,14 @@ class Workspace:
                 "delta": delta,
                 "series": series[-60:],
                 "error": errors.get(pid),
-                "health": models.health(p, pid in latest),
+                "metrics_source": source,
+                "metrics_as_of": manual.get("as_of") if source == "manual" else None,
+                "health": models.health(p, bool(latest)),
             })
+        stamps = [row.get("ts") for row in history if row.get("ts")]
         return {
             "generated_at": ts or utc_now(),
+            "last_collection": max(stamps) if stamps else None,
             "brand": accounts.get("brand", {}),
             "counts": models.summarize(
                 accounts["platforms"],

@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.2.0] — 2026-11-02
+
+### Added
+
+- **Manual numbers**: every platform can store dated values typed by hand
+  (`manual_metrics`), shown with their measurement date and stored in history.
+- **Desktop app for Windows**: a tray application that starts the local server,
+  opens the panel in an Edge app window, updates numbers from the tray and stops
+  the server on quit. Built with the in-box `csc.exe`, no .NET SDK.
+- `presence.exe --quit` for a clean shutdown.
+- Icon set: application icon (`.ico`) for the executable, tray and shortcuts.
+
+### Changed
+
+- Copy rewritten for people, not developers: *Profile health*, *Accounts*,
+  *Up to date*, *To fix*, *Live* and *Manual*.
+- "Updated X ago" is now based on the last real collection.
+- The state endpoint rebuilds from configuration and history, so manual numbers
+  appear immediately after saving.
+
+### Fixed
+
+- Manual snapshots are recorded once per date, not on every save.
+
 ## [1.1.0] — 2026-11-02
 
 ### Added

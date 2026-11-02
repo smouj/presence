@@ -85,6 +85,35 @@ class StateTests(unittest.TestCase):
         self.assertEqual(github["metrics"]["followers"], 3)
         self.assertEqual(github["error"], "boom")
 
+
+    def test_manual_metrics_fill_missing_data(self):
+        workspace = make_workspace()
+        accounts = workspace.load_config()
+        accounts["platforms"][0]["manual_metrics"] = {
+            "values": {"followers": 42}, "as_of": "2026-09-20"}
+        state = workspace.build_state(accounts)
+        github = [p for p in state["platforms"] if p["id"] == "github"][0]
+        self.assertEqual(github["metrics"]["followers"], 42)
+        self.assertEqual(github["metrics_source"], "manual")
+        self.assertEqual(github["metrics_as_of"], "2026-09-20")
+
+    def test_manual_snapshot_is_recorded_once(self):
+        workspace = make_workspace()
+        accounts = workspace.load_config()
+        accounts["platforms"][0]["manual_metrics"] = {
+            "values": {"followers": 42}, "as_of": "2026-09-20"}
+        workspace.save_config(accounts)
+        workspace.save_config(accounts)
+        rows = [r for r in workspace.history() if "github" in r.get("metrics", {})]
+        self.assertEqual(len(rows), 1)
+
+    def test_last_collection_is_reported(self):
+        workspace = make_workspace()
+        accounts = workspace.load_config()
+        workspace.append_history("2026-10-01T09:00:00+00:00", {"github": {"followers": 1}})
+        state = workspace.build_state(accounts)
+        self.assertEqual(state["last_collection"], "2026-10-01T09:00:00+00:00")
+
     def test_csv_export(self):
         workspace = make_workspace()
         accounts = workspace.load_config()
