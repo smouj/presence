@@ -1,0 +1,22 @@
+# Local workspace data — never commit real accounts
+accounts.json
+data.json
+history.jsonl
+backups/
+metrics.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
