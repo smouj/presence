@@ -70,6 +70,19 @@ Then open <http://127.0.0.1:8770>, press **Collect** and edit your accounts.
 
 Requirements: Python 3.11 or newer. Nothing else. No Node, no Docker, no build step.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/dashboard-dark.png" alt="Presence dashboard, dark theme" width="900"><br>
+  <sub>Dashboard, dark theme — demo workspace with invented data.</sub>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/dashboard-light.png" alt="Presence dashboard, light theme" width="440">
+  <img src="docs/screenshots/editor.png" alt="Account editor" width="440"><br>
+  <sub>Light theme and the account editor.</sub>
+</p>
+
 ## Configuration
 
 `accounts.json` is the source of truth. It is git-ignored: the repository only

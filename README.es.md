@@ -69,6 +69,19 @@ Abre <http://127.0.0.1:8770>, pulsa **Collect** y edita tus cuentas.
 
 Requisitos: Python 3.11 o superior. Nada más. Sin Node, sin Docker, sin compilación.
 
+## Capturas
+
+<p align="center">
+  <img src="docs/screenshots/dashboard-dark.png" alt="Panel de Presence, tema oscuro" width="900"><br>
+  <sub>Panel en tema oscuro — workspace de demostración con datos inventados.</sub>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/dashboard-light.png" alt="Panel de Presence, tema claro" width="440">
+  <img src="docs/screenshots/editor.png" alt="Editor de cuenta" width="440"><br>
+  <sub>Tema claro y editor de cuenta.</sub>
+</p>
+
 ## Configuración
 
 `accounts.json` es la fuente de verdad y está excluido de Git. El repositorio solo

@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.1.0] — 2026-11-02
+
+### Added
+
+- Brand icons for 15 networks, embedded in the page (no CDN, no runtime requests).
+- Dark and light themes plus three accents, remembered in the browser.
+- HUD with setup-health ring, live/error/pending/manual distribution and legend.
+- Cards grouped by priority, with brand tiles, metric tiles, sparklines and setup bars.
+- Deep links: `#p=<id>` opens an account; `?theme=` and `?accent=` set the look.
+- Screenshots of both themes and the editor.
+
+### Changed
+
+- Statistics now separate collector **errors** from platforms that simply have no
+  data yet, instead of counting both as failures.
+- The interface is split into `index.html`, `app.css`, `app.js` and `icons.js`.
+
+### Fixed
+
+- Sparklines rendered as opaque wedges; they are now a line with an endpoint.
+- The theme button drew a dot instead of a sun.
+- A collector field (`failed`) leaked into the metric tiles.
+
 All notable changes to Presence are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).

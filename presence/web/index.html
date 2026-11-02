@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-accent="amber">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,34 +10,45 @@
 </head>
 <body>
 
-<div class="topbar">
-  <div class="brand">Presence<span>· social accounts</span></div>
-  <div class="search">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+<header class="hud">
+  <div class="logo">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+        <path d="M30 20.5a14 14 0 0 1 0 23"/>
+        <path d="M34.6 14a22 22 0 0 1 0 36"/>
+      </g>
+      <circle cx="22" cy="32" r="5.5" fill="currentColor"/>
     </svg>
+    Presence <span class="ver">1.1.0</span>
+  </div>
+
+  <div class="search">
+    <span id="searchicon"></span>
     <input id="q" type="search" placeholder="Search platform, handle or task…" autocomplete="off" aria-label="Search">
   </div>
-  <div class="actions">
-    <button class="btn" id="collect">Collect</button>
-    <button class="btn ghost" id="export">CSV</button>
-  </div>
-</div>
 
-<section class="kpis" id="kpis"></section>
+  <div class="hud-right">
+    <button class="iconbtn" id="accent" title="Change accent" aria-label="Change accent">◐</button>
+    <button class="iconbtn" id="theme" title="Switch theme" aria-label="Switch theme"></button>
+    <button class="btn" id="collect"></button>
+    <button class="btn ghost" id="export" title="Export CSV" aria-label="Export CSV">CSV</button>
+  </div>
+</header>
+
+<section class="hero" id="hero"></section>
 
 <div class="toolbar">
   <div class="chips" id="chips"></div>
   <div class="spacer"></div>
   <select class="select" id="sort" aria-label="Sort">
-    <option value="priority">Priority</option>
-    <option value="name">Name</option>
+    <option value="priority">Group by priority</option>
+    <option value="health">Setup health</option>
     <option value="pending">Open tasks</option>
-    <option value="metric">Setup health</option>
+    <option value="name">Name</option>
   </select>
 </div>
 
-<main class="grid" id="grid"></main>
+<main id="grid"></main>
 
 <footer>
   Presence only reads. It never publishes, schedules or edits a remote profile.
@@ -49,6 +60,7 @@
 <aside class="drawer" id="drawer" aria-hidden="true"></aside>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="icons.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

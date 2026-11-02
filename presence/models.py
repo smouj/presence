@@ -130,15 +130,21 @@ def health(platform: dict, collected: bool = False) -> dict:
     }
 
 
-def summarize(platforms: list[dict], metrics: dict) -> dict:
+def summarize(platforms: list[dict], metrics: dict, errors: dict | None = None) -> dict:
     auto = [p for p in platforms if p.get("tracking") == "auto"]
+    auto_ids = [p["id"] for p in auto]
+    errors = errors or {}
+    auto_ok = sum(1 for pid in auto_ids if pid in metrics)
+    auto_error = sum(1 for pid in auto_ids if pid in errors and pid not in metrics)
     items = [item for p in platforms for item in (p.get("checklist") or [])]
     scores = [health(p, p["id"] in metrics)["score"] for p in platforms]
     return {
         "total": len(platforms),
         "auto": len(auto),
         "manual": len(platforms) - len(auto),
-        "auto_ok": sum(1 for p in auto if p["id"] in metrics),
+        "auto_ok": auto_ok,
+        "auto_error": auto_error,
+        "auto_pending": len(auto_ids) - auto_ok - auto_error,
         "checklist_total": len(items),
         "checklist_done": sum(1 for item in items if item.get("done") is True),
         "checklist_open": sum(1 for item in items if item.get("done") is not True),

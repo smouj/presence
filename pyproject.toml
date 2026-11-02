@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "presence-panel"
-version = "1.0.0"
+version = "1.1.0"
 description = "Local-first control panel for your social accounts: one registry, setup checklists and metric tracking."
 readme = "README.md"
 requires-python = ">=3.11"

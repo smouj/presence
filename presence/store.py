@@ -140,7 +140,11 @@ class Workspace:
         return {
             "generated_at": ts or utc_now(),
             "brand": accounts.get("brand", {}),
-            "counts": models.summarize(accounts["platforms"], {p["id"]: p for p in platforms if p["metrics"]}),
+            "counts": models.summarize(
+                accounts["platforms"],
+                {p["id"]: p for p in platforms if p["metrics"]},
+                errors,
+            ),
             "platforms": platforms,
             "history_points": len(history),
         }
