@@ -88,31 +88,36 @@ def cmd_serve(args) -> int:
 
 
 def main(argv=None) -> int:
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("--root", metavar="DIR", default=argparse.SUPPRESS,
+                        help="workspace directory (default: current)")
+
     parser = argparse.ArgumentParser(
-        prog="presence", description="Local-first social account control panel.")
+        prog="presence", parents=[common],
+        description="Local-first social account control panel.")
     parser.add_argument("--version", action="version", version="presence " + __version__)
-    parser.add_argument("--root", default=".", help="workspace directory (default: current)")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    item = sub.add_parser("init", help="create accounts.json from the example")
+    item = sub.add_parser("init", parents=[common], help="create accounts.json from the example")
     item.set_defaults(func=cmd_init)
 
-    item = sub.add_parser("check", help="validate accounts.json")
+    item = sub.add_parser("check", parents=[common], help="validate accounts.json")
     item.set_defaults(func=cmd_check)
 
-    item = sub.add_parser("collect", help="read public metrics and update data.json")
+    item = sub.add_parser("collect", parents=[common], help="read public metrics and update data.json")
     item.set_defaults(func=cmd_collect)
 
-    item = sub.add_parser("export", help="write a CSV of the latest metrics")
+    item = sub.add_parser("export", parents=[common], help="write a CSV of the latest metrics")
     item.add_argument("-o", "--output")
     item.set_defaults(func=cmd_export)
 
-    item = sub.add_parser("serve", help="start the dashboard")
+    item = sub.add_parser("serve", parents=[common], help="start the dashboard")
     item.add_argument("--host", default="127.0.0.1")
     item.add_argument("--port", type=int, default=8770)
     item.set_defaults(func=cmd_serve)
 
     args = parser.parse_args(argv)
+    args.root = getattr(args, "root", ".")
     return args.func(args)
 
 
